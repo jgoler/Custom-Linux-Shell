@@ -1,6 +1,5 @@
 import os
 import time 
-<<<<<<< HEAD
 import subprocess
 isTerminated = False
 while not isTerminated:
