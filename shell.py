@@ -23,6 +23,5 @@ while not isTerminated:
         location = os.getcwd()
     if command[0:1] == "cd":
         os.chdir(command[3:])
-        location = os.getcwd()
     else:
         os.system(command)
