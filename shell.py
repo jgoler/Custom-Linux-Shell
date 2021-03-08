@@ -33,8 +33,9 @@ while not isTerminated:
             #does process_id exist in x
             if process_id not in x:
                 print("You entered a process id that doesn't exist")
-        q = subprocess.Popen(process_id, signal.SIGCONT)
-    else:    
+            continue
+        os.system("kill -SIGCONT " + process_id)
+    else:                                                                       
         args = shlex.split(command)
         p = subprocess.Popen(args)
         #append process name, and process id 
