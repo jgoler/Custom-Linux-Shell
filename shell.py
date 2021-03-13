@@ -31,14 +31,14 @@ while not isTerminated:
         process_id = command[3:]      
         command_of_process = ""                      
         #want to check if it truly is an existing process
-
         # Here is the updated solution from lines 36-43
         num_jobs = len(jobs)
         x = 0
-        process_existence = false
+        process_existence = False
         while x < num_jobs:
             if process_id in jobs[x]:
                 process_existence = True
+            x += 1
         if not process_existence:
             print("You entered a process id that doesn't exist")
         else:
@@ -51,17 +51,22 @@ while not isTerminated:
     elif command[0:2] == "fg":
         process_id = command[3:]
         command_of_process = ""
-        for x in jobs:
-            #does process_id exist in x
-            if process_id not in x:
-                print("You entered a process id that doesn't exist")
-            x++
-        os.kill(process_id, signal.SIGCONT)
-        for y in command_list:
-            if y[1] == process_id:
-                command_of_process = y[0] 
-        args = shlex.split(command_of_process)
-        subprocess.run(args)
+        num_jobs = len(jobs)
+        x = 0
+        process_existence = False
+        while x < num_jobs:
+            if process_id in jobs[x]:
+                process_existence = True
+            x += 1
+        if not process_existence:
+            print("You entered a process id that doesn't exist")
+        else:
+            os.kill(process_id, signal.SIGCONT)
+            for y in command_list:
+                if y[1] == process_id:
+                    command_of_process = y[0] 
+            args = shlex.split(command_of_process)
+            subprocess.run(args)
     else:                                                                       
         args = shlex.split(command)
         p = subprocess.Popen(args)
