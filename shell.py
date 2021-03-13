@@ -55,6 +55,7 @@ while not isTerminated:
             #does process_id exist in x
             if process_id not in x:
                 print("You entered a process id that doesn't exist")
+            x++
         os.kill(process_id, signal.SIGCONT)
         for y in command_list:
             if y[1] == process_id:
