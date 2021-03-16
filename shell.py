@@ -67,6 +67,8 @@ while not isTerminated:
                     command_of_process = y[0] 
             args = shlex.split(command_of_process)
             subprocess.run(args)
+    if command == "^C":
+        
     else:                                                                       
         args = shlex.split(command)
         p = subprocess.Popen(args)
