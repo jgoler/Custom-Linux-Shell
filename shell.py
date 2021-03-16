@@ -66,6 +66,6 @@ while not isTerminated:
         args = shlex.split(command)
         count = subprocess.Popen(args)
         #append process name, and process id 
-        jobs.append(command + " | " + str(p.pid))
-        command_list.append((count, p.pid))
+        jobs.append(command + " | " + str(count.pid))
+        command_list.append((count, count.pid))
     count += 1
