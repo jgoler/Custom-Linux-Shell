@@ -42,7 +42,7 @@ while not isTerminated:
         if not process_existence:
             print("You entered a process id that doesn't exist")
         else:
-            os.kill(process_id, signal.SIGCONT)
+            os.kill(int(process_id), signal.SIGCONT)
             for y in command_list:
                 if y[1] == process_id:
                     command_of_process = y[0] 
@@ -61,14 +61,12 @@ while not isTerminated:
         if not process_existence:
             print("You entered a process id that doesn't exist")
         else:
-            os.kill(process_id, signal.SIGCONT)
+            os.kill(int(process_id), signal.SIGCONT)
             for y in command_list:
                 if y[1] == process_id:
                     command_of_process = y[0] 
             args = shlex.split(command_of_process)
             subprocess.run(args)
-    if command == "^C":
-        
     else:                                                                       
         args = shlex.split(command)
         p = subprocess.Popen(args)
