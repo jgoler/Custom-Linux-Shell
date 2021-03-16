@@ -42,15 +42,11 @@ while not isTerminated:
         if not process_existence:
             print("You entered a process id that doesn't exist")
         else:
-            os.kill(int(process_id), signal.SIGCONT)
-            for y in command_list:
-                if y[1] == process_id:
-                    command_of_process = y[0] 
-            args = shlex.split(command_of_process)
-            q = subprocess.Popen(args)
+            os.kill(int(process_id), signal.SIGSTOP)
+            os.kill(int(process_id), signal.SIGCONT)    
     elif command[0:2] == "fg":
         process_id = command[3:]
-        command_of_process = ""
+        count = 0
         num_jobs = len(jobs)
         x = 0
         process_existence = False
@@ -61,16 +57,15 @@ while not isTerminated:
         if not process_existence:
             print("You entered a process id that doesn't exist")
         else:
-            os.kill(int(process_id), signal.SIGCONT)
+            os.kill(int(process_id), signal.SIGSTOP)
             for y in command_list:
                 if y[1] == process_id:
-                    command_of_process = y[0] 
-            args = shlex.split(command_of_process)
-            subprocess.run(args)
+                    count = y[0] 
+            count.wait()
     else:                                                                       
         args = shlex.split(command)
-        p = subprocess.Popen(args)
+        count = subprocess.Popen(args)
         #append process name, and process id 
         jobs.append(command + " | " + str(p.pid))
-        command_list.append((command, p.pid))
+        command_list.append((count, p.pid))
     count += 1
