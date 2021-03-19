@@ -3,12 +3,24 @@ import time
 import subprocess
 import shlex
 import signal 
+import copy
 count = 0 
 command_list = []
 isTerminated = False
+foreground_id = 0
 while not isTerminated:
     if count == 0:
         jobs = ["Process | ID"]
+    found_process = False
+    if foreground_id != 0:
+        for x in command_list:
+            if x[1] == foreground_id:
+                #if it is no longer running then we want make foreground_id 0   
+                if x[0].poll() != None:
+                    foreground_id = 0
+                    found_process = True
+        if found_process == False:
+            foreground_id = 0
     location = os.getcwd()
     time1 = time.localtime()
     actual_time = str(time.strftime("%c", time1))
@@ -59,14 +71,25 @@ while not isTerminated:
             y = 0
             while y < len(command_list):
                 if command_list[y][1] == process_id:
+                    foreground_id = copy.copy(process_id)
                     command_list[y][0].wait()
-    else:                                                                       
-        args = shlex.split(command)
-        command_list.append([3,5])
-        index = len(command_list) - 1
-        command_list[index][0] = subprocess.Popen(args)
-        proc_id = command_list[index][0].pid
-        command_list[index][1] = proc_id
-        #append process name, and process id    
-        jobs.append(command + " | " + str(proc_id))
+    elif command == "^C":
+        #find process id of current foreground job if there is one
+        #send that process a SIGINT signal  
+        #if foreground id is not currently running, then print "no current process in foreground"
+        if foreground_id == 0:
+            print("No current process in the foreground")
+        os.kill(foreground_id, signal.SIGINT)
+    else:   
+        try:                                                                    
+            args = shlex.split(command)
+            command_list.append([3,5])
+            index = len(command_list) - 1
+            command_list[index][0] = subprocess.Popen(args)
+            proc_id = command_list[index][0].pid
+            command_list[index][1] = proc_id
+            #append process name, and process id    
+            jobs.append(command + " | " + str(proc_id))
+        except:
+            print("invalid command")
     count += 1
