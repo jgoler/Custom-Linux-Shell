@@ -62,7 +62,7 @@ while not isTerminated:
                     command_list[y][0].wait()
     else:                                                                       
         args = shlex.split(command)
-        command_list.append(None)
+        command_list.append([3,5])
         index = len(command_list) - 1
         command_list[index][0] = subprocess.Popen(args)
         proc_id = command_list[index][0].pid
