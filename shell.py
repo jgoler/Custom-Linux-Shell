@@ -1,3 +1,4 @@
+
 import os
 import time 
 import subprocess
@@ -52,7 +53,23 @@ while not isTerminated:
                 print("You entered a process id that doesn't exist")
             else:
                 os.kill(int(process_id), signal.SIGSTOP)
-                os.kill(int(process_id), signal.SIGCONT)    
+                os.kill(int(process_id), signal.SIGCONT)  
+        elif command.find('|')!= -1:
+            command_list = []
+            num_commands = command.count('|')
+            num = 0
+            while (num < num_commands):
+                try:
+                    pipe_pos = command.index('|')
+                    search_pos = int(pipe_pos) - 1
+                    current_command = command[0:search_pos]
+                    command_list.append(current_command)
+                    command = command[pipe_pos + 2:]
+                    num += 1
+                except:
+                    num += 1
+            command_list.append(command[0:])
+            print(command_list)
         elif command[0:2] == "fg":
             process_id = command[3:]
             num_jobs = len(jobs)
@@ -92,3 +109,5 @@ while not isTerminated:
             print("No current process in the foreground")
         else:
             os.kill(foreground_id, signal.SIGINT)
+
+
