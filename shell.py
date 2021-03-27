@@ -1,4 +1,3 @@
-
 import os
 import time 
 import subprocess
@@ -9,6 +8,9 @@ count = 0
 command_list = []
 isTerminated = False
 foreground_id = 0
+
+
+  
 while not isTerminated:
     if foreground_id != 0:
         for x in command_list:
@@ -54,8 +56,9 @@ while not isTerminated:
             else:
                 os.kill(int(process_id), signal.SIGSTOP)
                 os.kill(int(process_id), signal.SIGCONT)  
-        elif command.find('|')!= -1:
+        elif command.count('|') > 0:
             command_list = []
+            fullCommand = ""
             num_commands = command.count('|')
             num = 0
             while (num < num_commands):
@@ -68,8 +71,19 @@ while not isTerminated:
                     num += 1
                 except:
                     num += 1
-            command_list.append(command[0:])
-            print(command_list)
+                command_list.append(command[0:])
+                print("command list " + "-".join(command_list))
+                c = ""
+                #try:
+                for i in command_list:
+                  print("test")  
+                  #print("i: " + i + " c: " + c + " hello ")
+                  c = os.system(i) # gets hung here
+                  print(type(str(c)))
+                  
+                  #print("hi ", c)
+            #except:
+            print("Invalid command")
         elif command[0:2] == "fg":
             process_id = command[3:]
             num_jobs = len(jobs)
