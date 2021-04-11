@@ -8,9 +8,6 @@ count = 0
 command_list = []
 isTerminated = False
 foreground_id = 0
-
-
-  
 while not isTerminated:
     if foreground_id != 0:
         for x in command_list:
@@ -58,8 +55,8 @@ while not isTerminated:
                 os.kill(int(process_id), signal.SIGCONT)  
         elif command.count('|') > 0:
             ps = subprocess.Popen(command,shell=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
-            output = ps.communicate()[0]
-            print(output)
+            command_list.append([ps, ps.pid])
+            jobs.append(command + " | " + str(ps.pid))
         elif command[0:2] == "fg":
             process_id = command[3:]
             num_jobs = len(jobs)
@@ -78,6 +75,27 @@ while not isTerminated:
                     if command_list[y][1] == process_id:
                         foreground_id = copy.copy(process_id)
                         command_list[y][0].wait()
+        elif command.count(">") > 0:
+            #echo text > filename
+            index_of = command.index(">")
+            extra_After = 0
+            extra_Before = 0
+            if command[index_of + 1] == " ":
+                extra_After += 1
+            if command[index_of - 1] == " ":
+                extra_Before += 1
+            file_name = command[(index_of + extra_After):]
+            print(file_name)
+            f = open(file_name + ".txt", 'w')
+            #find the output of the command
+            true_command = command[:(index_of - extra_Before)]
+            command_list.append([3,5])
+            args = shlex.split(true_command)
+            command_list[len(command_list) - 1][0] = subprocess.Popen(args, stdout = f)
+            proc_id = command_list[len(command_list) - 1][0].pid
+            command_list[len(command_list) - 1][1] = proc_id
+            jobs.append(true_command + " | " + str(proc_id))
+            f.close()
         else:   
             try:                                                                    
                 args = shlex.split(command)
